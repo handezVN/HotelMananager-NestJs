@@ -10,8 +10,7 @@ export const EnvKeyName = {
 
   // sentry
   SENTRY_DSN: 'SENTRY_DSN',
-  MONGODB:
-    'mongodb+srv://handez:hoiconcac@cluster0.4pjddui.mongodb.net/?retryWrites=true&w=majority',
-  PRITEKEY: 'handez911',
-  saltRounds: `10`,
+  MONGODB: 'MONGODB',
+  PRITEKEY: 'PRITEKEY',
+  saltRounds: 'saltRounds',
 };

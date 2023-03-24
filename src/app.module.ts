@@ -1,7 +1,7 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,8 +12,20 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, UserSchema } from './models/User.schema';
 import { HotelModule } from './hotel/hotel.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import Joi from 'joi';
+
 const mongodb = [
-  MongooseModule.forRoot(EnvKeyName.MONGODB),
+  MongooseModule.forRootAsync({
+    inject: [ConfigService],
+    useFactory: (configService: ConfigService) => {
+      const config: MongooseModuleFactoryOptions = {
+        uri: configService.get<string>(EnvKeyName.MONGODB),
+      };
+
+      return config;
+    },
+  }),
   MongooseModule.forFeature([
     {
       name: Booking.name,
@@ -35,8 +47,19 @@ const graphql = [
   }),
 ];
 
+const Config = [
+  ConfigModule.forRoot({
+    isGlobal: true,
+    validationSchema: Joi.object({
+      NODE_ENV: Joi.string()
+        .valid('development', 'production', 'test', 'provision')
+        .default('development'),
+      PORT: Joi.number().default(3000),
+    }),
+  }),
+];
 @Module({
-  imports: [...mongodb, ...graphql, UserModule, HotelModule],
+  imports: [...mongodb, ...graphql, UserModule, HotelModule, ...Config],
   controllers: [AppController],
   providers: [AppService],
 })

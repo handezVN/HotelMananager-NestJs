@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EnvKeyName } from 'src/common/enums/env';
@@ -14,6 +15,7 @@ export class UserService {
 
     @InjectModel(Employee.name)
     private readonly EmployeeModel: Model<EmployeeDocument>,
+    private configService: ConfigService,
   ) {}
   async loginUser(args: any) {
     console.log('loginUser', args);
@@ -32,9 +34,13 @@ export class UserService {
         };
       }
     }
-    const token = jwt.sign({ ...user }, EnvKeyName.PRITEKEY, {
-      expiresIn: '7d',
-    });
+    const token = jwt.sign(
+      { ...user },
+      this.configService.get(EnvKeyName.PRITEKEY),
+      {
+        expiresIn: '7d',
+      },
+    );
 
     return {
       msg: 'Đăng nhập thành công.',
@@ -52,7 +58,7 @@ export class UserService {
     } else {
       const hashpassword = bcrypt.hashSync(
         args.password,
-        parseInt(EnvKeyName.saltRounds),
+        parseInt(this.configService.get(EnvKeyName.saltRounds)),
       );
       const newUser = new this.UserModel({
         email: args.email,
@@ -64,7 +70,10 @@ export class UserService {
   }
   async reloginUser(args: any) {
     try {
-      var decoded = jwt.verify(args.token, EnvKeyName.PRITEKEY);
+      var decoded = jwt.verify(
+        args.token,
+        this.configService.get(EnvKeyName.PRITEKEY),
+      );
       const data = decoded._doc; // bar
       const user = await this.UserModel.findOne({
         email: data.email,
@@ -95,7 +104,7 @@ export class UserService {
       try {
         const hashpassword = bcrypt.hashSync(
           args.password,
-          parseInt(EnvKeyName.saltRounds),
+          parseInt(this.configService.get(EnvKeyName.saltRounds)),
         );
         const newUser = new this.UserModel({
           email: args.email,

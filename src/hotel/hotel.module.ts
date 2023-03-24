@@ -9,7 +9,6 @@ import { HotelResolver } from './hotel.resolver';
 import { HotelService } from './hotel.service';
 import { Category, CategorySchema } from 'src/models/Category.schema';
 const mongodb = [
-  MongooseModule.forRoot(EnvKeyName.MONGODB),
   MongooseModule.forFeature([
     {
       name: User.name,

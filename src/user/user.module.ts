@@ -7,7 +7,6 @@ import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
 const mongodb = [
-  MongooseModule.forRoot(EnvKeyName.MONGODB),
   MongooseModule.forFeature([
     {
       name: User.name,
