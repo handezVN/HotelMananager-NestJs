@@ -1,0 +1,88 @@
+type Hotel {
+  id: ID!
+  name: String
+  address: String
+}
+
+type Category {
+  id: ID!
+  name: String
+  hotelId: String
+}
+
+type Room {
+  id: ID!
+  name: String
+  categoryId: String
+  status: Boolean
+  floor: String
+  bookingId: String
+  price: Int
+  totalNight: Int
+  checkInDate: String
+  booking: Booking
+  isClean: Boolean
+  isPayment: Boolean
+  deposit: Int
+}
+type Booking {
+  id: ID!
+  RoomName: String
+  RoomId: String
+  RoomPrice: Int
+  hotelId: String
+  CheckInDate: String
+  CheckOutDate: String
+  ExtraFee: Int
+  ExtraReaSon: [ExtraItem]
+  CustomerList: [Customer1]
+}
+type ExtraItem {
+  name: String
+  quantity: Int
+  price: Int
+  roomId: String
+  serviceId: String
+}
+type Customer1 {
+  name: String
+  address: String
+  gen: String
+  birthday: String
+  number: String
+}
+type ReturnMessage {
+  msg: String
+  status: Int
+}
+type Mutation {
+  getRoomOfHotel(hotelId: String!): [Room]
+  createHotel(name: String!, userId: String!, address: String!): Hotel
+  createRoom(
+    name: String!
+    hotelId: String!
+    floor: String!
+    categoryId: String!
+  ): ReturnMessage
+  editRoom(
+    roomId: String!
+    floor: String!
+    categoryId: String!
+    name: String!
+  ): ReturnMessage
+  editRoomPrice(
+    roomId: String!
+    bookingId: String!
+    price: Int!
+    totalNight: Int!
+    isPayment: Boolean!
+    deposit: Int!
+  ): ReturnMessage
+  createCategory(name: String!, hotelId: String!): Category
+  updateHotel(id: String!, name: String!, address: String!): String
+}
+type Query {
+  getAllHotels(userId: String!): [Hotel]
+  getHotelOfStaff(userId: String!): Hotel
+  getCategoryOfHotels(hotelId: String!): [Category]
+}

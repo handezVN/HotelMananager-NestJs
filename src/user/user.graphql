@@ -1,0 +1,29 @@
+type User {
+  id: ID!
+  email: String
+  password: Int
+}
+
+type Mutation {
+  loginUser(email: String!, password: String!): LoginStatus
+  registerUser(email: String!, password: String!): String
+  reloginUser(token: String!): LoginStatus
+  registerStaff(
+    email: String!
+    password: String!
+    hotelId: String!
+    name: String!
+    role: String!
+  ): String
+  editStaff(id: String!, name: String!, role: String!): String
+  removeStaff(id: String!): String
+}
+
+type LoginStatus {
+  msg: String
+  status: Int
+  token: String
+  userId: String
+  email: String
+  role: String
+}
