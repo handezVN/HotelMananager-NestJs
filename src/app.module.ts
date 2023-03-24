@@ -13,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, UserSchema } from './models/User.schema';
 import { HotelModule } from './hotel/hotel.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import Joi from 'joi';
+import * as Joi from 'joi';
 
 const mongodb = [
   MongooseModule.forRootAsync({
