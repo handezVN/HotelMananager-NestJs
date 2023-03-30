@@ -5,9 +5,10 @@ import { Employee, EmployeeSchema } from 'src/models/Employee.schema';
 import { Hotel, HotelSchema } from 'src/models/Hotel.schema';
 import { User, UserSchema } from 'src/models/User.schema';
 import { Room, RoomSchema } from 'src/models/Room.schema';
-import { HotelResolver } from './hotel.resolver';
+import { HotelAdminResolver } from './hotel.resolver';
 import { HotelService } from './hotel.service';
 import { Category, CategorySchema } from 'src/models/Category.schema';
+import { Service, ServiceSchema } from 'src/models/Services.schema';
 const mongodb = [
   MongooseModule.forFeature([
     {
@@ -30,10 +31,14 @@ const mongodb = [
       name: Category.name,
       schema: CategorySchema,
     },
+    {
+      name: Service.name,
+      schema: ServiceSchema,
+    },
   ]),
 ];
 @Module({
   imports: [...mongodb],
-  providers: [HotelResolver, HotelService],
+  providers: [HotelAdminResolver, HotelService],
 })
 export class HotelModule {}

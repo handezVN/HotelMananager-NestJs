@@ -1,5 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LoginUserDTO } from './dto/UserDTO';
 import { EditStaffInput } from './Input/editStaff.input';
 import { LoginInput } from './Input/login.input';
 import { RegisterStaffInput } from './Input/registerStaff.input';

@@ -1,3 +1,9 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+export const JWT_SECRET_KEY = process.env.PRITEKEY;
+export const EXPIRES_TIME = '7d';
+
 export const EnvKeyName = {
   // system
   NODE_ENV: 'NODE_ENV',

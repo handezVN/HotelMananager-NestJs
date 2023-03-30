@@ -1,4 +1,8 @@
-export class LoginUserDTO {
-  email: String;
-  password: String;
+export class UserEntity {
+  msg: string;
+  status: number;
+  token?: any;
+  userId?: any;
+  email?: any;
+  role?: any;
 }

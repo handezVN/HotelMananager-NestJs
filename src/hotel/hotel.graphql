@@ -55,6 +55,12 @@ type ReturnMessage {
   msg: String
   status: Int
 }
+type Service {
+  id: ID!
+  type: String
+  name: String
+  price: Int
+}
 type Mutation {
   getRoomOfHotel(hotelId: String!): [Room]
   createHotel(name: String!, userId: String!, address: String!): Hotel
@@ -80,8 +86,22 @@ type Mutation {
   ): ReturnMessage
   createCategory(name: String!, hotelId: String!): Category
   updateHotel(id: String!, name: String!, address: String!): String
+  createService(
+    type: String!
+    name: String!
+    price: Int!
+    hotelId: String!
+  ): Service
+  editService(
+    type: String!
+    name: String!
+    price: Int!
+    serviceId: String!
+  ): ReturnMessage
+  deleteService(serviceId: String!): ReturnMessage
 }
 type Query {
+  getService(hotelId: String!): [Service]
   getAllHotels(userId: String!): [Hotel]
   getHotelOfStaff(userId: String!): Hotel
   getCategoryOfHotels(hotelId: String!): [Category]

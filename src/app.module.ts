@@ -2,19 +2,16 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
-import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EnvKeyName } from './common/enums/env';
+import { EnvKeyName, EXPIRES_TIME, JWT_SECRET_KEY } from './common/enums/env';
 import { Booking, BookingSchema } from './models/Boooking.schema';
 import { upperDirectiveTransformer } from './common/directives/upper-case.directive';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, UserSchema } from './models/User.schema';
 import { HotelModule } from './hotel/hotel.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
-
 const mongodb = [
   MongooseModule.forRootAsync({
     inject: [ConfigService],
@@ -58,6 +55,7 @@ const Config = [
     }),
   }),
 ];
+
 @Module({
   imports: [...mongodb, ...graphql, UserModule, HotelModule, ...Config],
   controllers: [AppController],

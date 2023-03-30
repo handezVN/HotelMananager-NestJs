@@ -5,6 +5,7 @@ import { Category, CategoryDocument } from 'src/models/Category.schema';
 import { Employee, EmployeeDocument } from 'src/models/Employee.schema';
 import { Hotel } from 'src/models/Hotel.schema';
 import { Room, RoomDocument } from 'src/models/Room.schema';
+import { Service, ServiceDocument } from 'src/models/Services.schema';
 import { HotelModule } from './hotel.module';
 
 @Injectable()
@@ -18,6 +19,8 @@ export class HotelService {
     private readonly EmployeeModel: Model<EmployeeDocument>,
     @InjectModel(Category.name)
     private readonly CategoryModel: Model<CategoryDocument>,
+    @InjectModel(Service.name)
+    private readonly ServiceModel: Model<ServiceDocument>,
   ) {}
   async createHotel(args) {
     const newHotel = new this.HotelModel({
@@ -110,5 +113,52 @@ export class HotelService {
     return data.sort((a, b) =>
       a.name !== b.name ? (a.name < b.name ? -1 : 1) : 0,
     );
+  }
+  async createService(args) {
+    const data = await new this.ServiceModel({
+      type: args.type,
+      name: args.name,
+      price: args.price,
+      hotelId: args.hotelId,
+    });
+    return await data.save();
+  }
+  async getService(args) {
+    const data = await this.ServiceModel.find({ hotelId: args.hotelId });
+    return data;
+  }
+  async editService(args) {
+    const data = await this.ServiceModel.findByIdAndUpdate(args.serviceId, {
+      $set: {
+        name: args.name,
+        price: args.price,
+        type: args.type,
+      },
+    });
+    if (data) {
+      return {
+        msg: 'Edit service success !',
+        status: 200,
+      };
+    } else {
+      return {
+        msg: 'Edit service failed !',
+        status: 400,
+      };
+    }
+  }
+  async deleteService(args) {
+    try {
+      await this.ServiceModel.findByIdAndRemove(args.serviceId);
+      return {
+        msg: 'Delete Item Success !',
+        status: 200,
+      };
+    } catch (error) {
+      return {
+        msg: 'Delete Item Failed !',
+        status: 400,
+      };
+    }
   }
 }
