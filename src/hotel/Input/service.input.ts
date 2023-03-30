@@ -8,7 +8,7 @@ export class ServiceInput {
   @Field()
   hotelId: String;
   @Field()
-  price: String;
+  price: Number;
   @Field()
   type: String;
 }

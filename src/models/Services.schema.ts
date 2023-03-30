@@ -12,6 +12,8 @@ export class Service {
   @Prop()
   price: Number;
   @Prop()
+  hotelId: String;
+  @Prop()
   ServiceId: String;
 }
 export const ServiceSchema = SchemaFactory.createForClass(Service);

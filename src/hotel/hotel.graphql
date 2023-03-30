@@ -91,7 +91,7 @@ type Mutation {
     name: String!
     price: Int!
     hotelId: String!
-  ): Service
+  ): ReturnMessage
   editService(
     type: String!
     name: String!

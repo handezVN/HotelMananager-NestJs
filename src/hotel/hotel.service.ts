@@ -115,13 +115,33 @@ export class HotelService {
     );
   }
   async createService(args) {
-    const data = await new this.ServiceModel({
+    const findService = await this.ServiceModel.findOne({
+      name: args.name,
+      hotelId: args.hotelId,
+    });
+    if (findService) {
+      return {
+        msg: 'Sản phẩm này đã tồn tại !',
+        status: 400,
+      };
+    }
+    const data = new this.ServiceModel({
       type: args.type,
       name: args.name,
       price: args.price,
       hotelId: args.hotelId,
     });
-    return await data.save();
+    const result = await data.save();
+    if (result) {
+      return {
+        msg: 'Create Services Success ',
+        status: 200,
+      };
+    } else
+      return {
+        msg: 'Lỗi server',
+        status: 500,
+      };
   }
   async getService(args) {
     const data = await this.ServiceModel.find({ hotelId: args.hotelId });
