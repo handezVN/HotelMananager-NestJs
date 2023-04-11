@@ -11,7 +11,10 @@ import { UserModule } from './user/user.module';
 import { User, UserSchema } from './models/User.schema';
 import { HotelModule } from './hotel/hotel.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { BookingModule } from './booking/booking.module';
 import * as Joi from 'joi';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 const mongodb = [
   MongooseModule.forRootAsync({
     inject: [ConfigService],
@@ -55,9 +58,23 @@ const Config = [
     }),
   }),
 ];
-
+const Guard = [
+  PassportModule,
+  JwtModule.register({
+    secret: JWT_SECRET_KEY,
+    signOptions: { expiresIn: EXPIRES_TIME },
+  }),
+];
 @Module({
-  imports: [...mongodb, ...graphql, UserModule, HotelModule, ...Config],
+  imports: [
+    ...Guard,
+    ...mongodb,
+    ...graphql,
+    UserModule,
+    HotelModule,
+    ...Config,
+    BookingModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

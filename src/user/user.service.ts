@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { EnvKeyName } from 'src/common/enums/env';
 import { Employee, EmployeeDocument } from 'src/models/Employee.schema';
 import { User, UserDocument } from 'src/models/User.schema';
-const jwt = require('jsonwebtoken');
+import { JwtService } from '@nestjs/jwt';
 const bcrypt = require('bcrypt');
 @Injectable()
 export class UserService {
@@ -16,6 +16,7 @@ export class UserService {
     @InjectModel(Employee.name)
     private readonly EmployeeModel: Model<EmployeeDocument>,
     private configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
   async loginUser(args: any) {
     console.log('loginUser', args);
@@ -34,11 +35,10 @@ export class UserService {
         };
       }
     }
-    const token = jwt.sign(
+    const token = this.jwtService.sign(
       { ...user },
-      this.configService.get(EnvKeyName.PRITEKEY),
       {
-        expiresIn: '7d',
+        privateKey: this.configService.get(EnvKeyName.PRITEKEY),
       },
     );
 
@@ -70,7 +70,7 @@ export class UserService {
   }
   async reloginUser(args: any) {
     try {
-      var decoded = jwt.verify(
+      var decoded = this.jwtService.verify(
         args.token,
         this.configService.get(EnvKeyName.PRITEKEY),
       );

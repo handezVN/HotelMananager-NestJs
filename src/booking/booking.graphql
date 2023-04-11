@@ -1,0 +1,43 @@
+input ListRoom {
+  roomId: [String!]
+}
+input ListCustomer {
+  ListCustomer: [Customer]
+}
+input Customer {
+  name: String
+  address: String
+  gen: String
+  birthday: String
+  number: String
+}
+input ExtraItem1 {
+  roomId: String
+  serviceId: String
+  name: String
+  quantity: Int
+  price: Int
+}
+input ListExtraItem {
+  ListExtraItem: [ExtraItem1]
+}
+
+type Mutation {
+  checkInRoom(
+    input: ListRoom!
+    price: Int!
+    totalNight: Int!
+    hotelId: String!
+    isPayment: Boolean!
+    deposit: Int!
+  ): RequestMessage
+  checkOutRoom(bookingId: String!): RequestMessage
+  addCustomer(bookingId: String!, ListCustomer: ListCustomer!): String
+  editExtraItem(bookingId: String!, ListExtraItem: ListExtraItem!): String
+}
+type RequestMessage {
+  msg: String
+  status: Int
+  rooms: [String]
+  hotelId: String
+}
