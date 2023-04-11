@@ -1,33 +1,45 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 
-export type RoomDocument = HydratedDocument<Room>;
+export type RoomDocument = Room & Document;
 
 @Schema()
 export class Room {
-  @Prop()
-  name: String;
-  @Prop()
-  floor: String;
-  @Prop()
-  categoryId: String;
-  @Prop()
-  hotelId: String;
-  @Prop()
-  status: Boolean;
-  @Prop()
-  checkInDate: String;
-  @Prop()
-  totalNight: Number;
-  @Prop()
-  price: Number;
-  @Prop()
-  bookingId: String;
-  @Prop()
-  isClean: Boolean;
-  @Prop()
-  isPayment: Boolean;
-  @Prop()
-  deposit: Number;
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  floor: string;
+
+  @Prop({ required: true })
+  categoryId: string;
+
+  @Prop({ required: true })
+  hotelId: string;
+
+  @Prop({ required: true, default: true })
+  status: boolean;
+
+  @Prop({ required: false })
+  checkInDate: string;
+
+  @Prop({ required: false })
+  totalNight: number;
+
+  @Prop({ required: false })
+  price: number;
+
+  @Prop({ required: false })
+  bookingId: string;
+
+  @Prop({ required: false, default: false })
+  isClean: boolean;
+
+  @Prop({ required: false, default: false })
+  isPayment: boolean;
+
+  @Prop({ required: false })
+  deposit: number;
 }
+
 export const RoomSchema = SchemaFactory.createForClass(Room);

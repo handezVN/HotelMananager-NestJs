@@ -148,4 +148,30 @@ export class BookingService {
       hotelId: booking.hotelId,
     };
   };
+  getBooking = async (id) => {
+    const data = await this.BookingModel.findById(id);
+    return data;
+  };
+  cleanRoom = async (args) => {
+    const data = await this.RoomModel.findByIdAndUpdate(args.roomId, {
+      $set: {
+        isClean: true,
+      },
+    });
+    if (data) {
+      return {
+        status: 200,
+        msg: 'Cleaned Success !',
+        roomId: args.roomId,
+        hotelId: data.hotelId,
+      };
+    } else {
+      return {
+        status: 401,
+        msg: 'Error server!',
+        roomId: args.roomId,
+        hotelId: data.hotelId,
+      };
+    }
+  };
 }

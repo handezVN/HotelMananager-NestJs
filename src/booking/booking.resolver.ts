@@ -1,18 +1,46 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Mutation,
+  ObjectType,
+  Parent,
+  ResolveField,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { BookingService } from './booking.service';
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { AuthenticationGuard } from 'src/common/guards/auth.guard';
 import {
   AddCustomer,
   BookingIdInput,
   BookingInput,
   EditExtraItem,
+  RoomIdInput,
 } from './Input/booking.input';
+import { PubSubEngine, withFilter } from 'graphql-subscriptions';
+import { Room } from 'src/models/Room.schema';
+@ObjectType()
+export class RoomStatusPayload {
+  @Field(() => Boolean)
+  isCheckIn: boolean;
 
+  @Field(() => Boolean)
+  isCheckOut: boolean;
+
+  @Field(() => Boolean)
+  isClean: boolean;
+
+  @Field(() => [String])
+  roomId: string[];
+}
+// @UseGuards(AuthenticationGuard)
 @Resolver()
-@UseGuards(AuthenticationGuard)
 export class BookingResolver {
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(
+    @Inject('PUB_SUB') private pubSub: PubSubEngine,
+    private readonly bookingService: BookingService,
+  ) {}
 
   @Mutation()
   async checkInRoom(@Args() args: BookingInput) {
@@ -22,11 +50,11 @@ export class BookingResolver {
         isCheckIn: true,
         isCheckOut: false,
         isClean: false,
-        roomId: args.input,
+        roomId: args.input.roomId,
         hotelId: result.hotelId,
       };
       console.log(data);
-      // pubsub.publish("CHECKINROOM", { RoomStatus: data });
+      this.pubSub.publish('CHECKINROOM', { RoomStatus: data });
     }
 
     return result;
@@ -43,7 +71,7 @@ export class BookingResolver {
         hotelId: result.hotelId,
       };
       console.log(data);
-      // pubsub.publish("CHECKOUTROOM", { RoomStatus: data });
+      this.pubSub.publish('CHECKOUTROOM', { RoomStatus: data });
     }
     return result;
   }
@@ -57,7 +85,7 @@ export class BookingResolver {
       roomId: null,
       hotelId: result.hotelId,
     };
-    // pubsub.publish("CUSTOMER", { RoomStatus: data });
+    this.pubSub.publish('CUSTOMER', { RoomStatus: data });
     return result.msg;
   }
 
@@ -71,7 +99,36 @@ export class BookingResolver {
       roomId: null,
       hotelId: result.hotelId,
     };
-    // pubsub.publish("EXTRAITEM", { RoomStatus: data });
+    this.pubSub.publish('EXTRAITEM', { RoomStatus: data });
     return result.msg;
+  }
+  @Mutation()
+  async cleanRoom(@Args() args: RoomIdInput) {
+    const result = await this.bookingService.cleanRoom(args);
+    const data = {
+      isCheckIn: false,
+      isCheckOut: false,
+      isClean: true,
+      roomId: [result.roomId],
+      hotelId: result.hotelId,
+    };
+    this.pubSub.publish('CLEANROOM', { RoomStatus: data });
+    return result.msg;
+  }
+
+  @Subscription(() => RoomStatusPayload, {
+    filter: (payload, variables) =>
+      payload.RoomStatus.hotelId === variables.hotelId,
+  })
+  async RoomStatus(@Args('hotelId') hotelId: string) {
+    return this.pubSub.asyncIterator([
+      'CHECKINROOM',
+      'CHECKOUTROOM',
+      'CLEANROOM',
+      'CREATEROOM',
+      'EDITROOM',
+      'EXTRAITEM',
+      'CUSTOMER',
+    ]);
   }
 }

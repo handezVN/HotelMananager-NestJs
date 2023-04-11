@@ -1,5 +1,13 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Field, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { AuthenticationGuard } from 'src/common/guards/auth.guard';
@@ -11,12 +19,19 @@ import { GetHotelInput } from './Input/getHotel.input';
 import { RoomInput } from './Input/room.input';
 import { ServiceInput } from './Input/service.input';
 import { HotelType } from './type/hotel.type';
+import { Room, RoomDocument } from 'src/models/Room.schema';
+import { BookingService } from 'src/booking/booking.service';
+import { Booking } from 'src/models/Boooking.schema';
+import { async } from 'rxjs';
 
 @Resolver()
 @UseGuards(AuthenticationGuard)
 @UseGuards(RolesGuard)
 export class HotelAdminResolver {
-  constructor(private readonly hotelService: HotelService) {}
+  constructor(
+    private readonly hotelService: HotelService,
+    private readonly bookingService: BookingService,
+  ) {}
 
   @Query()
   @Roles(Role.Admin)

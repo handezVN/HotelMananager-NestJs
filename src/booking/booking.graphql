@@ -34,10 +34,26 @@ type Mutation {
   checkOutRoom(bookingId: String!): RequestMessage
   addCustomer(bookingId: String!, ListCustomer: ListCustomer!): String
   editExtraItem(bookingId: String!, ListExtraItem: ListExtraItem!): String
+  cleanRoom(roomId: String!): String
 }
 type RequestMessage {
   msg: String
   status: Int
   rooms: [String]
   hotelId: String
+}
+
+type Subscription {
+  RoomStatus(hotelId: String!): RoomStatus
+  HelloWorld: Code
+}
+
+type RoomStatus {
+  isCheckIn: Boolean
+  isCheckOut: Boolean
+  isClean: Boolean
+  roomId: [String]
+}
+type Code {
+  code: String
 }

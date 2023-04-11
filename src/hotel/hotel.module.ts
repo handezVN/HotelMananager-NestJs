@@ -11,6 +11,9 @@ import { Category, CategorySchema } from 'src/models/Category.schema';
 import { Service, ServiceSchema } from 'src/models/Services.schema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { Booking, BookingSchema } from 'src/models/Boooking.schema';
+import { BookingService } from 'src/booking/booking.service';
+import { RoomResolver } from './room.resolver';
 const mongodb = [
   MongooseModule.forFeature([
     {
@@ -37,6 +40,10 @@ const mongodb = [
       name: Service.name,
       schema: ServiceSchema,
     },
+    {
+      name: Booking.name,
+      schema: BookingSchema,
+    },
   ]),
 ];
 const Guard = [
@@ -48,6 +55,6 @@ const Guard = [
 ];
 @Module({
   imports: [...mongodb, ...Guard],
-  providers: [HotelAdminResolver, HotelService],
+  providers: [HotelAdminResolver, HotelService, BookingService, RoomResolver],
 })
 export class HotelModule {}

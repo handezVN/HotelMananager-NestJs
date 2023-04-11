@@ -20,7 +20,11 @@ export class BookingInput {
   @Field()
   deposit: Number;
 }
-
+@InputType()
+export class RoomIdInput {
+  @Field()
+  roomId: String;
+}
 @InputType()
 export class BookingIdInput {
   @Field()

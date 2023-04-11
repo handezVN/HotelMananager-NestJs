@@ -15,6 +15,7 @@ import { BookingModule } from './booking/booking.module';
 import * as Joi from 'joi';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { PubSub } from 'graphql-subscriptions';
 const mongodb = [
   MongooseModule.forRootAsync({
     inject: [ConfigService],
@@ -46,7 +47,12 @@ const graphql = [
     installSubscriptionHandlers: true,
   }),
 ];
-
+const graphqlSubscriptionHandlers = [
+  {
+    provide: 'PUB_SUB',
+    useValue: new PubSub(),
+  },
+];
 const Config = [
   ConfigModule.forRoot({
     isGlobal: true,
@@ -76,6 +82,6 @@ const Guard = [
     BookingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ...graphqlSubscriptionHandlers],
 })
 export class AppModule {}
