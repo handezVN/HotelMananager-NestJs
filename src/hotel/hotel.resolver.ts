@@ -88,7 +88,6 @@ export class HotelAdminResolver {
     const result = await this.hotelService.createCategory(args);
     return result;
   }
-  @Roles(Role.Admin, Role.Staff, Role.User)
   @Mutation()
   async getRoomOfHotel(@Args() args: GetHotelInput) {
     const result = await this.hotelService.getRoomOfHotel(args);
