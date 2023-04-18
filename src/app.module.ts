@@ -45,6 +45,7 @@ const graphql = [
     typePaths: ['./**/*.graphql'],
     transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
     installSubscriptionHandlers: true,
+    playground: false,
   }),
 ];
 const graphqlSubscriptionHandlers = [
