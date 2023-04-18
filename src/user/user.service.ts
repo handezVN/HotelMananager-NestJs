@@ -156,4 +156,24 @@ export class UserService {
     }
     return 'Remove Staff Success !';
   }
+  async getStaffsOfHotel(args) {
+    const employee = await this.EmployeeModel.find({ hotelId: args.hotelId });
+    let data = [];
+
+    if (employee.length > 0) {
+      employee.forEach(async (e) => {
+        data.push({
+          id: e._id,
+          name: e.name,
+          role: e.role,
+          userId: e.userId,
+        });
+      });
+    }
+    return data;
+  }
+  async getUserbyId(id) {
+    const data = await this.UserModel.findById(id);
+    return data;
+  }
 }

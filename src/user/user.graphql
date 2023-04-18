@@ -1,9 +1,14 @@
+type Employee {
+  id: ID!
+  name: String
+  role: String
+  user: User
+}
 type User {
   id: ID!
   email: String
-  password: Int
+  password: String
 }
-
 type Mutation {
   loginUser(email: String!, password: String!): LoginStatus
   registerUser(email: String!, password: String!): String
@@ -18,7 +23,9 @@ type Mutation {
   editStaff(id: String!, name: String!, role: String!): String
   removeStaff(id: String!): String
 }
-
+type Query {
+  getStaffsOfHotel(hotelId: String!): [Employee]
+}
 type LoginStatus {
   msg: String
   status: Int

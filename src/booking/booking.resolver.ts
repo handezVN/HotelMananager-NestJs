@@ -36,7 +36,7 @@ export class RoomStatusPayload {
   @Field(() => [String])
   roomId: string[];
 }
-// @UseGuards(AuthenticationGuard)
+@UseGuards(AuthenticationGuard)
 @Resolver()
 export class BookingResolver {
   constructor(
@@ -131,21 +131,5 @@ export class BookingResolver {
     };
     this.pubSub.publish('CLEANROOM', { RoomStatus: data });
     return result.msg;
-  }
-
-  @Subscription(() => RoomStatusPayload, {
-    filter: (payload, variables) =>
-      payload.RoomStatus.hotelId === variables.hotelId,
-  })
-  async RoomStatus(@Args('hotelId') hotelId: string) {
-    return this.pubSub.asyncIterator([
-      'CHECKINROOM',
-      'CHECKOUTROOM',
-      'CLEANROOM',
-      'CREATEROOM',
-      'EDITROOM',
-      'EXTRAITEM',
-      'CUSTOMER',
-    ]);
   }
 }

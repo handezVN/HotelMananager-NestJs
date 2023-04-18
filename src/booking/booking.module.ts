@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Booking, BookingSchema } from 'src/models/Boooking.schema';
 import { Room, RoomSchema } from 'src/models/Room.schema';
 import { PubSub } from 'graphql-subscriptions';
+import { RoomStatusResolver } from './roomStatus.resolver';
 const mongodb = [
   MongooseModule.forFeature([
     {
@@ -25,6 +26,6 @@ const graphqlSubscriptionHandlers = [
 ];
 @Module({
   imports: [...mongodb],
-  providers: [BookingService, BookingResolver, ...graphqlSubscriptionHandlers],
+  providers: [BookingService, BookingResolver, ...graphqlSubscriptionHandlers, RoomStatusResolver],
 })
 export class BookingModule {}

@@ -1,12 +1,21 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { EditStaffInput } from './Input/editStaff.input';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { EditStaffInput, StaffOfHotels } from './Input/editStaff.input';
 import { LoginInput } from './Input/login.input';
 import { RegisterStaffInput } from './Input/registerStaff.input';
 import { ReLoginInput } from './Input/reLogin.input';
 import { UserType } from './type/user.type';
 import { UserService } from './user.service';
+import { User } from 'src/models/User.schema';
+import { Employee } from 'src/models/Employee.schema';
 
-@Resolver((of) => UserType)
+@Resolver(() => Employee)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
   @Mutation((returns) => UserType)
@@ -46,5 +55,15 @@ export class UserResolver {
     console.log(args);
     const result = await this.userService.removeStaff(args);
     return result;
+  }
+  @Query()
+  async getStaffsOfHotel(@Args() args: StaffOfHotels) {
+    const result = await this.userService.getStaffsOfHotel(args);
+    return result;
+  }
+
+  @ResolveField(() => User)
+  async user(@Parent() employee: Employee) {
+    return await this.userService.getUserbyId(employee.userId);
   }
 }

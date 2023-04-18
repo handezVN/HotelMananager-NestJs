@@ -10,3 +10,8 @@ export class EditStaffInput {
   @Field()
   role: string;
 }
+
+export class StaffOfHotels {
+  @Field()
+  hotelId: string;
+}
