@@ -41,7 +41,6 @@ export class HotelAdminResolver {
     return result;
   }
   @Query()
-  @Roles(Role.Admin)
   async getHotelOfStaff(@Args() args: GetHotelInput) {
     const result = await this.hotelService.getHotelOfStaff(args);
     return result;
