@@ -174,4 +174,48 @@ export class BookingService {
       };
     }
   };
+
+  getBookingFromTo = async (from: string, to: string, hotelId: string) => {
+    const fromTime = new Date(from);
+    const toTime = new Date(to);
+
+    return await this.BookingModel.find({
+      hotelId: hotelId,
+      checkInAt: {
+        $gte: fromTime,
+        $lte: toTime,
+      },
+    });
+  };
+  getTotalBookingFromTo = async (from: string, to: string, hotelId: string) => {
+    const fromTime = new Date(from);
+    const toTime = new Date(to);
+    const dateRevenueMap = new Map();
+    const Booking2 = await this.BookingModel.find({
+      hotelId: hotelId,
+      checkOutAt: {
+        $gte: fromTime,
+        $lte: toTime,
+      },
+    });
+    Booking2.forEach((doc) => {
+      const date = doc.checkOutAt.toLocaleDateString('en-US');
+      let revenue: any = doc.RoomPrice;
+      if (doc?.ExtraFee) {
+        revenue = revenue + doc.ExtraFee;
+      }
+      if (dateRevenueMap.has(date)) {
+        dateRevenueMap.set(date, dateRevenueMap.get(date) + revenue);
+      } else {
+        dateRevenueMap.set(date, revenue);
+      }
+    });
+    const arr = [];
+
+    for (let [key, value] of dateRevenueMap) {
+      arr.push([{ date: key, total: value }]);
+    }
+    console.log(arr);
+    return arr;
+  };
 }

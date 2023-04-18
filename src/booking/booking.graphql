@@ -21,6 +21,22 @@ input ExtraItem1 {
 input ListExtraItem {
   ListExtraItem: [ExtraItem1]
 }
+type ChartItem {
+  date: String
+  total: Int
+}
+type Query {
+  getBookingofHotelFromTo(
+    from: String!
+    to: String!
+    hotelId: String!
+  ): [Booking]
+  getTotalBookingofHotelFromTo(
+    from: String!
+    to: String!
+    hotelId: String!
+  ): [[ChartItem]]
+}
 
 type Mutation {
   checkInRoom(

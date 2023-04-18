@@ -26,6 +26,15 @@ export class RoomIdInput {
   roomId: String;
 }
 @InputType()
+export class BookingFromTo {
+  @Field()
+  from: string;
+  @Field()
+  to: string;
+  @Field()
+  hotelId: string;
+}
+@InputType()
 export class BookingIdInput {
   @Field()
   bookingId: String;

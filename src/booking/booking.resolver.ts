@@ -7,12 +7,14 @@ import {
   ResolveField,
   Resolver,
   Subscription,
+  Query,
 } from '@nestjs/graphql';
 import { BookingService } from './booking.service';
 import { Inject, UseGuards } from '@nestjs/common';
 import { AuthenticationGuard } from 'src/common/guards/auth.guard';
 import {
   AddCustomer,
+  BookingFromTo,
   BookingIdInput,
   BookingInput,
   EditExtraItem,
@@ -41,7 +43,22 @@ export class BookingResolver {
     @Inject('PUB_SUB') private pubSub: PubSubEngine,
     private readonly bookingService: BookingService,
   ) {}
-
+  @Query()
+  async getBookingofHotelFromTo(@Args() args: BookingFromTo) {
+    return await this.bookingService.getBookingFromTo(
+      args.from,
+      args.to,
+      args.hotelId,
+    );
+  }
+  @Query()
+  async getTotalBookingofHotelFromTo(@Args() args: BookingFromTo) {
+    return await this.bookingService.getTotalBookingFromTo(
+      args.from,
+      args.to,
+      args.hotelId,
+    );
+  }
   @Mutation()
   async checkInRoom(@Args() args: BookingInput) {
     const result = await this.bookingService.checkInRoom(args);
