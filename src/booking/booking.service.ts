@@ -210,12 +210,16 @@ export class BookingService {
         dateRevenueMap.set(date, revenue);
       }
     });
-    const arr = [];
-
+    const labels = [];
+    const datasets = [];
     for (let [key, value] of dateRevenueMap) {
-      arr.push([{ date: key, total: value }]);
+      labels.push(key);
+      datasets.push(value);
     }
-    console.log(arr);
+    const arr = {
+      labels,
+      datasets,
+    };
     return arr;
   };
 }

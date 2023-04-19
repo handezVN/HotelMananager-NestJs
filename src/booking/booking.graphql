@@ -22,8 +22,8 @@ input ListExtraItem {
   ListExtraItem: [ExtraItem1]
 }
 type ChartItem {
-  date: String
-  total: Int
+  labels: [String]
+  datasets: [Int]
 }
 type Query {
   getBookingofHotelFromTo(
@@ -35,7 +35,7 @@ type Query {
     from: String!
     to: String!
     hotelId: String!
-  ): [[ChartItem]]
+  ): ChartItem
 }
 
 type Mutation {
